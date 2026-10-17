@@ -26,7 +26,7 @@ def chat_node(state: ChatState):
     return {"messages": response}
 
 
-conn=sqlite3.connect(database="chatbot.db", check_same_thread=False)
+conn = sqlite3.connect(database="chatbot.db", check_same_thread=False)
 checkPointer = SqliteSaver(conn)
 
 graph = StateGraph(ChatState)
@@ -37,3 +37,10 @@ graph.add_edge(START, "chat")
 graph.add_edge("chat", END)
 
 chatbot = graph.compile(checkpointer=checkPointer)
+
+def retrieveAllThreads():
+    all_thread = set()
+    for checkpoint in checkPointer.list(None):
+        all_thread.add(checkpoint.config["configurable"]["thread_id"])
+
+    return list(all_thread)
