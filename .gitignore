@@ -1,0 +1,8 @@
+venv/
+# Environment variables
+.env
+.venv/
+
+__pycache__
+
+Books
