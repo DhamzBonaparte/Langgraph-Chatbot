@@ -11,8 +11,10 @@ import os
 
 load_dotenv()
 
+os.environ['LANGCHAIN_PROJECT']="Sulav-Chatbot"
+
 model = ChatGoogleGenerativeAI(
-    model="gemini-3.5-flash-lite", google_api_key=os.getenv("GEMINI_API_KEY")
+    model="gemini-3.5-flash-lite", google_api_key=os.getenv("GEMINI_API_KEY_10")
 )
 
 
