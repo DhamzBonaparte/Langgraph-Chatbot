@@ -1,5 +1,5 @@
 import streamlit as st
-from backend import chatbot
+from langhgraph_backend import chatbot, retrieveAllThreads
 from langchain_core.messages import HumanMessage
 import uuid
 
@@ -26,7 +26,7 @@ def load_convo(thread_id):
     return state.values.get("messages", [])
 
 
-# SESSION STATE
+# SESSION SETUP
 
 if "message_history" not in st.session_state:
     st.session_state["message_history"] = []
@@ -35,13 +35,15 @@ if "thread_id" not in st.session_state:
     st.session_state["thread_id"] = generateThreadID()
 
 if "chat_threads" not in st.session_state:
-    st.session_state["chat_threads"] = []
+    st.session_state["chat_threads"] = retrieveAllThreads()
 
 add_thread(st.session_state["thread_id"])
-# SIDEBAR
+# SIDEBAR & UI
+
+st.title("Chatbot - Sulav")
+st.subheader("Wanna talk? Go ahead.")
 
 st.sidebar.title("Langgraph Chatbot")
-
 if st.sidebar.button("New chat"):
     reset_chat()
 
@@ -62,7 +64,11 @@ for thread_id in st.session_state["chat_threads"][::-1]:
         st.session_state["message_history"] = temp
 
 # CHAT
-CONFIG = {"configurable": {"thread_id": st.session_state["thread_id"]}}
+CONFIG = {
+    "configurable": {"thread_id": st.session_state["thread_id"]},
+    "metadata": {"thread_id": st.session_state["thread_id"]},
+    "run_name": "Chat-turn",
+}
 
 for message in st.session_state["message_history"]:
     with st.chat_message(message["role"]):
